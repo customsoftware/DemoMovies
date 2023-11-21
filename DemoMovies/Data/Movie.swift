@@ -28,6 +28,11 @@ struct Movie: Codable, Identifiable, Comparable {
     var vote_count: Int
     var isFavorite: Bool? = false
     
+    
+    // The way favorites are recorded, the value is NOT persistent between sessions.
+    //  Exit the app and the favorite status goes away. To make it persist between sessions,
+    //  the movie ID and favorite status can be stored to a dictionary and archived.
+    //  Then when the data is fetched, the archive can be read and applied to the movie list
     func isFavoriteMovie() -> Bool {
         guard let isFave = isFavorite else { return false }
         return isFave

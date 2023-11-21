@@ -16,10 +16,16 @@ class DataEngine {
     private var cancellable = Set<AnyCancellable>()
     private(set) var defaultImage: UIImage = UIImage(named: "default")!
     
-    /// In a production app, this key would not be stored in the app as it is here, but fetched via a secure call to a company authentication server so the key is protected
+    // In a production app, this key would not be stored in the app as it is here,
+    //  but fetched via a secure call to a company authentication server so the key is protected
     private(set) var apiKey = "7bfe007798875393b05c5aa1ba26323e"
     private let fetchMovieListQuery: String = "https://api.themoviedb.org/3/movie/now_playing?api_key="
     
+    
+    /// This is where the movie list is fetched
+    /// - Parameters:
+    /// - None
+    /// This uses Combine to asynchronously fetch the data from the server
     func fetchMovieList() -> Future<MovieList, MovieError> {
         let queryString = buildQueryString()
         
@@ -28,7 +34,7 @@ class DataEngine {
                 return promise(.failure(.badURL(description: "Invalid URL String")))
             }
             
-            
+            // Here is where the work gets done
             URLSession.shared.dataTaskPublisher(for: url)
                 .receive(on: DispatchQueue.main)
                 .tryMap {(data, response) in
@@ -62,6 +68,8 @@ class DataEngine {
         }
     }
     
+    
+    // This was never finished because there was no provided API for retrieving the images
     func fetchMoviePoster(movieID: Int, imagePath: String) throws {
         let headers = [
           "accept": "application/json",

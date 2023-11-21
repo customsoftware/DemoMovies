@@ -85,9 +85,12 @@ import Combine
             updateMovieFaveStatus(aMovie, new: aMovie.isFavoriteMovie())
         }
     }
-    
-    
-    private func preSortData(_ mode: MovieSort) {
+}
+ 
+
+// As a matter of habit, I put private and file private methods in separate extensions
+private extension MovieListViewModel {
+    func preSortData(_ mode: MovieSort) {
         switch mode {
         case .titleAlpha:
             displayedMovies.sort()
@@ -102,7 +105,7 @@ import Combine
         }
     }
     
-    private func updateMovieFaveStatus(_ movie: Movie, new faveStatus: Bool) {
+    func updateMovieFaveStatus(_ movie: Movie, new faveStatus: Bool) {
         let foundIndex = foundMovies.firstIndex { aMovie in
             aMovie.id == movie.id
         }
