@@ -13,7 +13,6 @@ struct MovieDetailsView: View {
     
     var body: some View {
         VStack(alignment: .listRowSeparatorLeading) {
-            Spacer()
             Text(theMovie.title)
                 .font(.title)
             Divider()
