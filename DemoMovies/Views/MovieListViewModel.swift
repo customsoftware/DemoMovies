@@ -14,10 +14,14 @@ import Combine
     @Published var showFavorites: Bool = false {
         didSet {
             if showFavorites {
-                displayedMovies = foundMovies.filter({ aMovie in
+                displayedMovies = displayedMovies.filter({ aMovie in
                     aMovie.isFavorite == true
                 })
             } else {
+                // Update found
+                displayedMovies.forEach { aMovie in
+                    updateMovieFaveStatus(aMovie, new: aMovie.isFavoriteMovie())
+                }
                 displayedMovies = foundMovies
             }
         }
@@ -62,8 +66,20 @@ import Combine
             .store(in: &cancellable)
     }
     
+   
+    func updateFaveStatusOfAllMovies() {
+        // Reset them all, because some in displayed may have been altered
+        foundMovies.forEach { aMovie in
+            updateMovieFaveStatus(aMovie, new: false)
+        }
+        // Now update from displayed list
+        displayedMovies.forEach { aMovie in
+            updateMovieFaveStatus(aMovie, new: aMovie.isFavoriteMovie())
+        }
+    }
     
-    func updateMovieFaveStatus(_ movie: Movie, new faveStatus: Bool) {
+   
+    private func updateMovieFaveStatus(_ movie: Movie, new faveStatus: Bool) {
         let foundIndex = foundMovies.firstIndex { aMovie in
             aMovie.id == movie.id
         }

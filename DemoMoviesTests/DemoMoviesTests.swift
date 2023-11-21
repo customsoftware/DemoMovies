@@ -63,7 +63,7 @@ final class DemoMoviesTests: XCTestCase {
         let aMovieID = 670292
         
 //        do {
-            fetchEngine.fetchMoviePoster(movieID: aMovieID)
+            try fetchEngine.fetchMoviePoster(movieID: aMovieID)
 //            expectation.fulfill()
 //        } catch let error {
 //            print(error.localizedDescription)

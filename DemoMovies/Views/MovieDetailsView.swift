@@ -13,18 +13,18 @@ struct MovieDetailsView: View {
     
     var body: some View {
         VStack(alignment: .listRowSeparatorLeading) {
-            HStack {
-                Text(theMovie.title)
-            }
-            
-            HStack {
-                Text("Description:")
-            }
-                
-            HStack {
-                Text(theMovie.overview)
-                    .padding(.leading, 50)
-            }
+            Text(theMovie.title)
+                .font(.title)
+            Divider()
+            Text("Description:")
+                .bold()
+            Text(theMovie.overview)
+                .font(.caption)
+            Image("default", bundle: nil)
+                .frame(width: 250, height: 300)
+                .clipped()
+                .fixedSize(horizontal: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, vertical: true)
+                .padding()
             Spacer()
         }
         .toolbar(content: {
@@ -46,14 +46,15 @@ struct MovieDetailsView: View {
         })
         .onAppear(perform: {
             do {
-                try DataEngine.shared.fetchMoviePoster(movieID: theMovie.id)
+                try DataEngine.shared.fetchMoviePoster(movieID: theMovie.id, imagePath: theMovie.poster_path)
+                
                 isFavorite = theMovie.isFavoriteMovie()
             } catch let error {
                 print("\(error.localizedDescription)")
             }
         })
         .onDisappear(perform: {
-            
+            theMovie.isFavorite = isFavorite
         })
         .padding()
     }

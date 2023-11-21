@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MovieListItemView: View {
-    @State var theMovie: Movie
+    var theMovie: Movie
     
     var body: some View {
         HStack {
