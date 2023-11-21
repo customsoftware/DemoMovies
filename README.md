@@ -19,6 +19,3 @@ Thoughts and decisions which led to what you see.
 8.	I am not as fluent as I’d like to be with SwiftUI, so the views are sketchy at best, but they get the job done.
 
 9.	I’m not sure of the meaning of “add a way to view the movies you’ve favorited.” I interpreted that as filtering the list of movies to show just the favorites. It wasn’t until I was close to finished that I thought you might mean actually ordering tickets to a movie. I did not check to see if the movies API even permits or exposes that functionality. 
-
-Truth be told, not counting the two hours I lost trying to get the API calls to work, I spent about four hours on the project. The tail end of that time was getting the sorting working and debugging some of the behavior of applying and removing the favorites filter.
-
