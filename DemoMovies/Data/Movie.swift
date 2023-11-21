@@ -7,7 +7,11 @@
 
 import Foundation
 
-struct Movie: Codable, Identifiable {
+struct Movie: Codable, Identifiable, Comparable {
+    static func <(lhs: Movie, rhs: Movie) -> Bool {
+         return lhs.title < rhs.title
+     }
+    
     var adult: Bool
     var backdrop_path: String
     var genre_ids: [Int]

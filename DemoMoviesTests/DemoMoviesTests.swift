@@ -29,6 +29,8 @@ final class DemoMoviesTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
+    
+    // This was used to debug the initial build of the data fetch process.
     func testFetchingMovieList() async throws {
         // How we wait for the results
         let expectation = self.expectation(description: "Getting declination")
@@ -58,19 +60,25 @@ final class DemoMoviesTests: XCTestCase {
         XCTAssertEqual(returnedMovieList?.results.first?.original_title, theAnswer)
     }
     
+    
+    
+    // With current API, a success here is a false positive. The API needs to be fixed before this can work reliably.
     func testFetchMovieArt() async throws {
-//        let expectation = self.expectation(description: "Getting artwork")
+        let expectation = self.expectation(description: "Getting artwork")
         let aMovieID = 670292
+        let posterPath = "/vBZ0qvaRxqEhZwl6LWmruJqWE8Z.jpg"
         
-//        do {
-            try fetchEngine.fetchMoviePoster(movieID: aMovieID)
-//            expectation.fulfill()
-//        } catch let error {
-//            print(error.localizedDescription)
-//            expectation.fulfill()
-//        }
-        // Wait for something to happen
-//        await fulfillment(of: [expectation])
+        do {
+        try fetchEngine.fetchMoviePoster(movieID: aMovieID, imagePath: posterPath)
+            expectation.fulfill()
+            
+        } catch let error {
+            print(error.localizedDescription)
+            XCTFail("The fetch didn't work")
+            expectation.fulfill()
+        }
+//         Wait for something to happen
+        await fulfillment(of: [expectation])
       
     }
 }

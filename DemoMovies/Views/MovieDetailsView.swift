@@ -13,13 +13,26 @@ struct MovieDetailsView: View {
     
     var body: some View {
         VStack(alignment: .listRowSeparatorLeading) {
+            Spacer()
             Text(theMovie.title)
                 .font(.title)
             Divider()
             Text("Description:")
                 .bold()
             Text(theMovie.overview)
+                .frame(minHeight: 100)
                 .font(.caption)
+            Divider()
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Rating: ")
+                    Text(String(format: "%g",round(theMovie.vote_average * 100)/100))
+                }
+                VStack(alignment: .leading) {
+                    Text("Release date:")
+                    Text("\(theMovie.release_date)")
+                }
+            }
             Image("default", bundle: nil)
                 .frame(width: 250, height: 300)
                 .clipped()
@@ -47,7 +60,6 @@ struct MovieDetailsView: View {
         .onAppear(perform: {
             do {
                 try DataEngine.shared.fetchMoviePoster(movieID: theMovie.id, imagePath: theMovie.poster_path)
-                
                 isFavorite = theMovie.isFavoriteMovie()
             } catch let error {
                 print("\(error.localizedDescription)")

@@ -11,6 +11,12 @@ import Combine
 
 @MainActor class MovieListViewModel: ObservableObject {
     private var foundMovies: [Movie]
+    
+    var sortMode: MovieSort = .titleAlpha {
+        didSet {
+            preSortData(sortMode)
+        }
+    }
     @Published var showFavorites: Bool = false {
         didSet {
             if showFavorites {
@@ -23,6 +29,7 @@ import Combine
                     updateMovieFaveStatus(aMovie, new: aMovie.isFavoriteMovie())
                 }
                 displayedMovies = foundMovies
+                preSortData(sortMode)
             }
         }
     }
@@ -62,11 +69,12 @@ import Combine
             } receiveValue: { [weak self] movies in
                 self?.foundMovies = movies.results
                 self?.displayedMovies = movies.results
+                self?.preSortData(self?.sortMode ?? .titleAlpha)
             }
             .store(in: &cancellable)
     }
     
-   
+    
     func updateFaveStatusOfAllMovies() {
         // Reset them all, because some in displayed may have been altered
         foundMovies.forEach { aMovie in
@@ -78,7 +86,22 @@ import Combine
         }
     }
     
-   
+    
+    private func preSortData(_ mode: MovieSort) {
+        switch mode {
+        case .titleAlpha:
+            displayedMovies.sort()
+        case .rating:
+            displayedMovies.sort { m1, m2 in
+                m1.vote_average > m2.vote_average
+            }
+        case .releaseDate:
+            displayedMovies.sort { m1, m2 in
+                m1.release_date > m2.release_date
+            }
+        }
+    }
+    
     private func updateMovieFaveStatus(_ movie: Movie, new faveStatus: Bool) {
         let foundIndex = foundMovies.firstIndex { aMovie in
             aMovie.id == movie.id

@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct MoviewListView: View {
-    
+    @State private var showingOptions = false
     @State private var searchText: String = ""
     @ObservedObject var viewModel = MovieListViewModel(engine: DataEngine.shared)
     
@@ -38,7 +38,7 @@ struct MoviewListView: View {
                     }
                 }
                 .navigationTitle("Movie List")
-                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitleDisplayMode(.automatic)
                 .onAppear(perform: {
                     viewModel.updateFaveStatusOfAllMovies()
                 })
@@ -53,14 +53,30 @@ struct MoviewListView: View {
                             Text("Show All")
                         }
                     })
-//                    Button( action: { },
-//                            label: {
-//                        NavigationLink {
-//                            SortView()
-//                        } label: {
-//                            Text("Sort")
-//                        }
-//                    })
+                    
+                    Button("Sort") {
+                        showingOptions = true
+                    }
+                    .actionSheet(isPresented: $showingOptions) {
+                        ActionSheet(
+                            title: Text("Select a Sort Option"),
+                            buttons: [
+                                .default(Text(MovieSort.titleAlpha.text)) {
+                                    viewModel.sortMode = MovieSort.titleAlpha
+                                },
+                                
+                                .default(Text(MovieSort.releaseDate.text)) {
+                                    viewModel.sortMode = MovieSort.releaseDate
+                                },
+                            
+                                .default(Text(MovieSort.rating.text)) {
+                                    viewModel.sortMode = MovieSort.rating
+                                },
+                        
+                                .cancel()
+                            ]
+                        )
+                    }
                 })
             }
  
@@ -70,11 +86,4 @@ struct MoviewListView: View {
 
 #Preview {
     MoviewListView()
-}
-
-
-struct SortView: View {
-    var body: some View {
-        Text("Sort me")
-    }
 }
