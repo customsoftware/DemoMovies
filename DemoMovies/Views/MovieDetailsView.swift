@@ -10,6 +10,7 @@ import SwiftUI
 struct MovieDetailsView: View {
     @Binding var theMovie: Movie
     @State private var isFavorite: Bool = false
+    @State private(set) var posterImage: UIImage = UIImage(named: "default")!
     
     var body: some View {
         VStack(alignment: .listRowSeparatorLeading) {
@@ -32,12 +33,11 @@ struct MovieDetailsView: View {
                     Text("\(theMovie.release_date)")
                 }
             }
-            Image("default", bundle: nil)
-                .frame(width: 250, height: 300)
+            AsyncImage(url: buildImageURL(theMovie.poster_path), scale: 1)
+                .frame(width: 220, height: 330)
                 .clipped()
                 .fixedSize(horizontal: /*@START_MENU_TOKEN@*/true/*@END_MENU_TOKEN@*/, vertical: true)
                 .padding()
-            Spacer()
         }
         .toolbar(content: {
             Button {
@@ -57,18 +57,21 @@ struct MovieDetailsView: View {
             }.padding()
         })
         .onAppear(perform: {
-            do {
-                try DataEngine.shared.fetchMoviePoster(movieID: theMovie.id, imagePath: theMovie.poster_path)
-                isFavorite = theMovie.isFavoriteMovie()
-            } catch let error {
-                print("\(error.localizedDescription)")
-            }
+            isFavorite = theMovie.isFavoriteMovie()
         })
         .onDisappear(perform: {
             theMovie.isFavorite = isFavorite
         })
         .padding()
+        Spacer()
     }
+    
+    private func buildImageURL(_ endString: String) -> URL? {
+        var retString = "https://image.tmdb.org/t/p/w220_and_h330_face"
+        retString.append(endString)
+        return URL(string: retString)
+    }
+    
 }
 
 #Preview {
